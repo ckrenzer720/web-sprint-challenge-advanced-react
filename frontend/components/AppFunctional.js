@@ -74,28 +74,54 @@ export default function AppFunctional(props) {
   function move(evt) {
     // This event handler can use the helper above to obtain a new index for the "B",
     // and change any states accordingly.
+    const direction = evt.target.id;
+    const nextIndex = getNextIndex(direction);
+    if (nextIndex !== index) {
+      setIndex(nextIndex);
+      setSteps(steps + 1);
+      setCoordinates(getXY(direction));
+    } else {
+      setMessage(`You can't go ${direction}`);
+    }
   }
 
   function onChange(evt) {
-    // You will need this to update the value of the input.
-    setEmail;
+    setEmail(evt.target.value);
   }
 
-  function formSubmit(evt) {
-    // Use a POST request to send a payload to the server.
+  async function formSubmit(evt) {
     evt.preventDefault();
+    setMessage("");
+    await axios
+      .post("http://localhost:9000/api/result", {
+        x: coordinates.x,
+        y: coordinates.y,
+        steps,
+        email,
+      })
+      .then((res) => {
+        setMessage(res.data.message);
+        setEmail(initialEmail);
+      })
+      .catch((err) => {
+        if (err.response && err.response.data && err.response.data.message) {
+          setMessage(`${err.response.data.message}`);
+        } else {
+          setMessage("Ouch: an error occured. Please try again.");
+        }
+      });
   }
 
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Coordinates (2, 2)</h3>
-        <h3 id="steps">You moved 0 times</h3>
+        <h3 id="coordinates">{getXYMessage()}</h3>
+        <h3 id="steps">{`You moved ${steps} time${steps !== 1 ? "s" : ""}`}</h3>
       </div>
       <div id="grid">
         {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((idx) => (
-          <div key={idx} className={`square${idx === 4 ? " active" : ""}`}>
-            {idx === 4 ? "B" : null}
+          <div key={idx} className={`square${idx === index ? " active" : ""}`}>
+            {idx === index ? "B" : null}
           </div>
         ))}
       </div>
@@ -113,7 +139,7 @@ export default function AppFunctional(props) {
       </div>
       <form onSubmit={formSubmit}>
         <input id="email" type="email" placeholder="type email"></input>
-        {/* // value={setEmail}  */}
+        {/* //   */}
         <input id="submit" type="submit"></input>
       </form>
     </div>
