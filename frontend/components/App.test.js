@@ -1,7 +1,12 @@
 // Write your tests here
-test("sanity", () => {
-  expect(true).toBe(true);
-});
+beforeAll() {
+  render(<AppFunctional />)
+}
+
+describe() {
+  test('all buttons; up, down, left, right, and reset work as they should) {
+    }
+}
 
 /*
   getBy -- will always fail unless the test is 100% accurate --> exactly what you want
