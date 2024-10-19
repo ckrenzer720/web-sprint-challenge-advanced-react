@@ -1,8 +1,6 @@
-
-
 // Write your tests here
 test("sanity", () => {
-  screen.debug();
+  expect(true).toBe(true);
 });
 
 /*
