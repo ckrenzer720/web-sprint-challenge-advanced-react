@@ -43,7 +43,6 @@ export default function AppFunctional(props) {
   }
 
   function reset() {
-    // Use this helper to reset all states to their initial values.
     setMessage(initialMessage);
     setEmail(initialEmail);
     setSteps(initialSteps);
@@ -52,9 +51,6 @@ export default function AppFunctional(props) {
   }
 
   function getNextIndex(direction) {
-    // This helper takes a direction ("left", "up", "right", "down") and calculates what the next index
-    // of the "B" would be. If the move is impossible because we are at the edge of the grid,
-    // this helper should return the current index unchanged.
     const x = index % 3;
     const y = Math.floor(index / 3);
     switch (direction) {
@@ -72,8 +68,6 @@ export default function AppFunctional(props) {
   }
 
   function move(evt) {
-    // This event handler can use the helper above to obtain a new index for the "B",
-    // and change any states accordingly.
     const direction = evt.target.id;
     const nextIndex = getNextIndex(direction);
     if (nextIndex !== index) {
@@ -126,20 +120,33 @@ export default function AppFunctional(props) {
         ))}
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
-        <button id="left">LEFT</button>
-        <button id="up">UP</button>
-        <button id="right">RIGHT</button>
-        <button id="down">DOWN</button>
+        <button id="left" onClick={move}>
+          LEFT
+        </button>
+        <button id="up" onClick={move}>
+          UP
+        </button>
+        <button id="right" onClick={move}>
+          RIGHT
+        </button>
+        <button id="down" onClick={move}>
+          DOWN
+        </button>
         <button id="reset" onClick={reset}>
           reset
         </button>
       </div>
       <form onSubmit={formSubmit}>
-        <input id="email" type="email" placeholder="type email"></input>
-        {/* //   */}
+        <input
+          id="email"
+          type="email"
+          placeholder="type email"
+          onChange={onChange}
+          value={email}
+        ></input>
         <input id="submit" type="submit"></input>
       </form>
     </div>
